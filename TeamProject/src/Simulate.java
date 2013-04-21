@@ -7,5 +7,6 @@ public class Simulate {
 		int cyclicIndex;
 		int cubicalIndex;
 		//sorry
+		int x;
 	}
 }
