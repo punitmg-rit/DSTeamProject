@@ -1,5 +1,5 @@
 
-public class simulate {
+public class Simulate {
 
 	int eetst;
 	
