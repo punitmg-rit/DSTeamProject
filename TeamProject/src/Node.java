@@ -105,7 +105,6 @@ public class Node {
 
 	private void generateNeighbors() {
 
-		
 		// CUBICAL NEIGHBOR
 		// a node (k, ad-1 ad-2 ... a0) (k != 0, d)
 		// has a cubical neighbor (k - 1, ad-1 ad-2 ... ak' x ... x)
@@ -118,27 +117,69 @@ public class Node {
 		} else {
 			tempCyclicIndex = cyclicIndex - 1;
 		}
-		
-		String tempCubicalIndex="";
-		for(int i=0;i<cubicalIndex.length();i++){
-			
-			if(i==(cubicalIndex.length()-1)-cyclicIndex){
-				if(cubicalIndex.charAt(i) == '0'){
-					tempCubicalIndex = tempCubicalIndex+"1";
-				}else{
-					tempCubicalIndex = tempCubicalIndex+"0";
+
+		String tempCubicalIndex = "";
+		for (int i = 0; i < cubicalIndex.length(); i++) {
+
+			if (i == (cubicalIndex.length() - 1) - cyclicIndex) {
+				if (cubicalIndex.charAt(i) == '0') {
+					tempCubicalIndex = tempCubicalIndex + "1";
+				} else {
+					tempCubicalIndex = tempCubicalIndex + "0";
 				}
-			}else{
-				tempCubicalIndex = tempCubicalIndex+cubicalIndex.charAt(i);
+			} else if (i > (cubicalIndex.length() - 1) - cyclicIndex) {
+				tempCubicalIndex = tempCubicalIndex + "1";
+
+			} else {
+				tempCubicalIndex = tempCubicalIndex + cubicalIndex.charAt(i);
 			}
 		}
-		
+
 		cubicalNeighbor = new Node(tempCyclicIndex, tempCubicalIndex);
-		
-		
-		
-		
-		
+		System.out.println("Cubical Neighbor " + cubicalNeighbor);
+
+		// CYCLIC NEIGHBORS
+
+		tempCubicalIndex = "";
+		String temp = "";
+		for (int i = 0; i < cubicalIndex.length(); i++) {
+
+			if (i >= (cubicalIndex.length() - 1) - (cyclicIndex - 1)) {
+				temp = temp + cubicalIndex.charAt(i);
+
+			} else {
+				tempCubicalIndex = tempCubicalIndex + cubicalIndex.charAt(i);
+			}
+		}
+
+		System.out.println("temp " + temp);
+		int x = Integer.valueOf(temp, 2);
+		System.out.println("x " + x);
+		String temp1 = Integer.toBinaryString(x + 1);
+		String temp2 = Integer.toBinaryString(x - 1);
+		System.out.println("temp1 " + temp1);
+		System.out.println("temp2 " + temp2);
+
+		while (temp2.length() < temp.length()) {
+			temp2 = "0" + temp2;
+		}
+
+		if (temp2.length() > temp.length()) {
+			temp2 = temp2.substring(0, temp.length());
+		}
+
+		if (temp1.length() > temp.length()) {
+			temp1 = temp.substring(0, temp.length() - 1) + "0";
+		}
+
+		while (temp1.length() < temp.length()) {
+			temp2 = temp2 + "1";
+		}
+
+		cyclicNeighbor1 = new Node(tempCyclicIndex, tempCubicalIndex + temp1);
+		cyclicNeighbor2 = new Node(tempCyclicIndex, tempCubicalIndex + temp2);
+		System.out.println("Cyclic Neighbor " + cyclicNeighbor1);
+		System.out.println("Cyclic Neighbor " + cyclicNeighbor2);
 
 	}
 
@@ -157,6 +198,16 @@ public class Node {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "(" + cyclicIndex + ", " + cubicalIndex + ")";
+	}
+
+	public static void main(String[] args) {
+		Node n = new Node(4, 3, "1111");
+		System.out.println("this " + n);
 	}
 
 }
