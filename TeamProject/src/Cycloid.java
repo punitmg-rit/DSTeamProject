@@ -36,6 +36,7 @@ public class Cycloid {
 	}
 
 	public int getMsdb(Node source, Node dest){
+		System.out.println(source.getDimension());
 		for(int i = 0 ; i< source.getDimension(); i++){
 			if(source.getCubicalIndex().charAt(i) != dest.getCubicalIndex().charAt(i))
 				return source.getDimension() - i -1;
@@ -79,18 +80,29 @@ public class Cycloid {
 	}
 
 	public Node descending(int k, int msdb,Node src, Node dest){
-		Node next = new Node();
 		if (k == msdb){
 			return new Node(src.getDimension(), src.getCubicalNeighbor().getCyclicIndex(),
 					src.getCubicalNeighbor().getCubicalIndex());
 
 		}
 		else {
+			
+			Node cyclic1  = src.getCyclicNeighbor1();
+			cyclic1.setDimension(src.getDimension());
+			
+			Node cyclic2  = src.getCyclicNeighbor2();
+			cyclic2.setDimension(src.getDimension());
+			
+			Node insideLeafSet1  = src.getInsideLeafSet1();
+			insideLeafSet1.setDimension(src.getDimension());
+			
+			Node insideLeafSet2  = src.getInsideLeafSet2();
+			insideLeafSet2.setDimension(src.getDimension());
 
-			int msdbCyclic1 = getMsdb(src.getCyclicNeighbor1(),dest);
-			int msdbCyclic2 = getMsdb(src.getCyclicNeighbor2(), dest);
-			int msdbInside1 = getMsdb(src.getInsideLeafSet1(), dest);
-			int msdbInside2 = getMsdb(src.getOutsideLeafSet2(), dest);
+			int msdbCyclic1 = getMsdb(cyclic1,dest);
+			int msdbCyclic2 = getMsdb(cyclic2, dest);
+			int msdbInside1 = getMsdb(insideLeafSet1, dest);
+			int msdbInside2 = getMsdb(insideLeafSet2, dest);
 
 
 			if (msdbCyclic1 <= msdbCyclic2 && msdbCyclic1 < msdbInside1 && msdbCyclic1 < msdbInside2){
@@ -117,8 +129,13 @@ public class Cycloid {
 	public Node ascending(int k, int msdb,Node src, Node dest){
 		Node next = new Node();
 		while(k < msdb){
-			int msdb1 = getMsdb(src.getOutsideLeafSet1(), dest);
-			int msdb2 = getMsdb(src.getOutsideLeafSet2(), dest);
+			Node outsideLeafSet1  = src.getOutsideLeafSet1();
+			outsideLeafSet1.setDimension(src.getDimension());
+			
+			Node outsideLeafSet2  = src.getOutsideLeafSet2();
+			outsideLeafSet2.setDimension(src.getDimension());
+			int msdb1 = getMsdb(outsideLeafSet1, dest);
+			int msdb2 = getMsdb(outsideLeafSet2, dest);
 
 			if(msdb1 <= msdb2){
 				next = new Node(src.getDimension(), src.getOutsideLeafSet1().getCyclicIndex(),

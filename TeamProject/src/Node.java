@@ -141,7 +141,7 @@ public class Node {
 		}
 
 		cubicalNeighbor = new Node(tempCyclicIndex, tempCubicalIndex);
-		System.out.println("Cubical Neighbor " + cubicalNeighbor);
+		//System.out.println("Cubical Neighbor " + cubicalNeighbor);
 
 		// CUBICAL NEIGHBOR - END
 		// CYCLIC NEIGHBORS - START
@@ -196,16 +196,16 @@ public class Node {
 					+ temp2);
 		}
 
-		System.out.println("Cyclic Neighbor " + cyclicNeighbor1);
-		System.out.println("Cyclic Neighbor " + cyclicNeighbor2);
+		//System.out.println("Cyclic Neighbor " + cyclicNeighbor1);
+		//System.out.println("Cyclic Neighbor " + cyclicNeighbor2);
 		// CYCLIC NEIGHBORS - END
 		// INSIDE LEAF SET - START
 
 		insideLeafSet1 = new Node((cyclicIndex + 1) % dimension, cubicalIndex);
 		insideLeafSet2 = new Node(tempCyclicIndex, cubicalIndex);
 
-		System.out.println("Inside leaf set 1: " + insideLeafSet1);
-		System.out.println("Inside leaf set 2: " + insideLeafSet2);
+		//System.out.println("Inside leaf set 1: " + insideLeafSet1);
+		//System.out.println("Inside leaf set 2: " + insideLeafSet2);
 		// INSIDE LEAF SET - END
 		// OUTSIDE LEAF SET - START
 
@@ -229,8 +229,8 @@ public class Node {
 
 		outsideLeafSet1 = new Node(dimension - 1, temp1);
 		outsideLeafSet2 = new Node(dimension - 1, temp2);
-		System.out.println("Outside leaf set 1: " + outsideLeafSet1);
-		System.out.println("Outside leaf set 2: " + outsideLeafSet2);
+		//System.out.println("Outside leaf set 1: " + outsideLeafSet1);
+		//System.out.println("Outside leaf set 2: " + outsideLeafSet2);
 		// OUTSIDE LEAF SET - END
 
 	}
@@ -252,10 +252,25 @@ public class Node {
 		}
 	}
 
+//	@Override
+//	public String toString() {
+//		
+//		return "(" + cyclicIndex + ", " + cubicalIndex + ")";
+//	}
+	
 	@Override
 	public String toString() {
-		return "(" + cyclicIndex + ", " + cubicalIndex + ")";
+		return "Node [dimension=" + dimension + ", (" + cyclicIndex+ "," + cubicalIndex + " ) \n"+
+				", cubicalNeighbor= ("+ cubicalNeighbor.getCyclicIndex() +","+cubicalNeighbor.getCubicalIndex()+" ) \n"  
+				+ ", cyclicNeighbor1= (" + cyclicNeighbor1.getCyclicIndex()+","+cyclicNeighbor1.getCubicalIndex()+" )\n"
+				+ ", cyclicNeighbor2= (" + cyclicNeighbor2.getCyclicIndex()+","+cyclicNeighbor2.getCubicalIndex()+" )\n" 
+				+ ", insideLeafSet1= ("+ insideLeafSet1.getCyclicIndex() + ","+ insideLeafSet1.getCubicalIndex()+" )\n"
+				+ ", insideLeafSet2= (" + insideLeafSet2.getCyclicIndex()+","+insideLeafSet2.getCubicalIndex()+" )\n"
+				+ ", outsideLeafSet1= (" + outsideLeafSet1.getCyclicIndex()+","+outsideLeafSet1.getCubicalIndex()+" )\n" 
+				+ ", outsideLeafSet2= (" + outsideLeafSet2.getCyclicIndex()+","+outsideLeafSet2.getCubicalIndex()+" )\n" 
+				+ "]";
 	}
+	
 
 	public static void main(String[] args) {
 		Node n = new Node(4, 0, "1111");
