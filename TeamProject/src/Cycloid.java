@@ -28,21 +28,25 @@ public class Cycloid {
 
 		while(!sourceNode.equals(destinationNode)){
 			hopCount++;
-			System.out.println(sourceNode);
+			//System.out.println(sourceNode);
 			sourceNode = nextHop(sourceNode, destinationNode);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
+			if(hopCount>=10000){
+				System.out.println("Entering a cycle-- kill itertion");
+				return -1;
 			}
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 
 		return hopCount;
 	}
 
 	public int getMsdb(Node source, Node dest){
-		System.out.println(source.getDimension());
 		for(int i = 0 ; i< source.getDimension(); i++){
 			if(source.getCubicalIndex().charAt(i) != dest.getCubicalIndex().charAt(i))
 				return source.getDimension() - i -1;
@@ -111,12 +115,12 @@ public class Cycloid {
 			int msdbInside2 = getMsdb(insideLeafSet2, dest);
 
 
-			if (msdbCyclic1 <= msdbCyclic2 && msdbCyclic1 < msdbInside1 && msdbCyclic1 < msdbInside2){
+			if (msdbCyclic1 <= msdbCyclic2 && msdbCyclic1 <= msdbInside1 && msdbCyclic1 <= msdbInside2){
 				return new Node(src.getDimension(), src.getCyclicNeighbor1().getCyclicIndex(),
 						src.getCyclicNeighbor1().getCubicalIndex());
 			}
 
-			else	if (msdbCyclic2 <= msdbCyclic1 && msdbCyclic2 < msdbInside1 && msdbCyclic2 < msdbInside2){
+			else	if (msdbCyclic2 <= msdbCyclic1 && msdbCyclic2 <= msdbInside1 && msdbCyclic2 <= msdbInside2){
 				return new Node(src.getDimension(), src.getCyclicNeighbor2().getCyclicIndex(),
 						src.getCyclicNeighbor2().getCubicalIndex());
 			}
@@ -199,7 +203,7 @@ public class Cycloid {
 
 	public static void main(String[] args) {
 		Cycloid s = new Cycloid();
-		int hops = s.noOfHops(4, 0, 15, 0, 12);
+		int hops = s.noOfHops(6, 5, 47, 2, 51);
 		System.out.println(hops);
 	}
 }
