@@ -95,12 +95,17 @@ public class Node {
 		this.cyclicIndex = cycIndex;
 		this.cubicalIndex = cubIndex;
 		this.dimension = dimension;
+		//System.out.println("Dimension: " + dimension + ". Cyclic Index: "
+			//	+ cycIndex + ". Cubical Index: " + cubIndex);
 		generateNeighbors();
 	}
 
 	public Node(int cycIndex, String cubIndex) {
 		this.cyclicIndex = cycIndex;
 		this.cubicalIndex = cubIndex;
+	}
+
+	public Node() {
 	}
 
 	private void generateNeighbors() {
@@ -152,16 +157,19 @@ public class Node {
 				tempCubicalIndex = tempCubicalIndex + cubicalIndex.charAt(i);
 			}
 		}
-
+		int x;
+		if (cyclicIndex == 0)
+			temp = cubicalIndex;
 		//System.out.println("temp " + temp);
-		int x = Integer.valueOf(temp, 2);
-		//System.out.println("x " + x);
+		x = Integer.valueOf(temp, 2);
+
 		String temp1 = Integer.toBinaryString(x + 1);
 		String temp2 = Integer.toBinaryString(x - 1);
 		//System.out.println("temp1 " + temp1);
 		//System.out.println("temp2 " + temp2);
 
 		while (temp2.length() < temp.length()) {
+			//System.out.println("loop check1. ("+cyclicIndex+","+cubicalIndex+")");
 			temp2 = "0" + temp2;
 		}
 
@@ -174,11 +182,20 @@ public class Node {
 		}
 
 		while (temp1.length() < temp.length()) {
-			temp2 = temp2 + "1";
+			//System.out.println("loop check2. ("+cyclicIndex+","+cubicalIndex+")");
+			temp1 = temp1 + "1";
 		}
 
-		cyclicNeighbor1 = new Node(tempCyclicIndex, tempCubicalIndex + temp1);
-		cyclicNeighbor2 = new Node(tempCyclicIndex, tempCubicalIndex + temp2);
+		if (cyclicIndex == 0) {
+			cyclicNeighbor1 = new Node(tempCyclicIndex, temp1);
+			cyclicNeighbor2 = new Node(tempCyclicIndex, temp2);
+		} else {
+			cyclicNeighbor1 = new Node(tempCyclicIndex, tempCubicalIndex
+					+ temp1);
+			cyclicNeighbor2 = new Node(tempCyclicIndex, tempCubicalIndex
+					+ temp2);
+		}
+
 		System.out.println("Cyclic Neighbor " + cyclicNeighbor1);
 		System.out.println("Cyclic Neighbor " + cyclicNeighbor2);
 		// CYCLIC NEIGHBORS - END
@@ -193,24 +210,27 @@ public class Node {
 		// OUTSIDE LEAF SET - START
 
 		int cubicalIndexValue = Integer.valueOf(cubicalIndex, 2);
-		temp1 = Integer.toBinaryString((int) ((cubicalIndexValue + 1) % Math.pow(2, dimension)));
+		temp1 = Integer.toBinaryString((int) ((cubicalIndexValue + 1) % Math
+				.pow(2, dimension)));
 		if (cubicalIndexValue == 0) {
 			temp2 = Integer.toBinaryString(dimension - 1);
 		} else {
 			temp2 = Integer.toBinaryString(cubicalIndexValue - 1);
 		}
-		
-		while(temp1.length() < dimension){
-			temp1 = "0"+temp1;
+
+		while (temp1.length() < dimension) {
+			//System.out.println("loop check3. ("+cyclicIndex+","+cubicalIndex+")");
+			temp1 = "0" + temp1;
 		}
-		while(temp2.length() < dimension){
-			temp2 = "0"+temp2;
+		while (temp2.length() < dimension) {
+			//System.out.println("loop check4. ("+cyclicIndex+","+cubicalIndex+")");
+			temp2 = "0" + temp2;
 		}
-		
-		outsideLeafSet1 = new Node(dimension-1, temp1);
-		outsideLeafSet2 = new Node(dimension-1, temp2);
-		System.out.println("Outside leaf set 1: "+outsideLeafSet1);
-		System.out.println("Outside leaf set 2: "+outsideLeafSet2);
+
+		outsideLeafSet1 = new Node(dimension - 1, temp1);
+		outsideLeafSet2 = new Node(dimension - 1, temp2);
+		System.out.println("Outside leaf set 1: " + outsideLeafSet1);
+		System.out.println("Outside leaf set 2: " + outsideLeafSet2);
 		// OUTSIDE LEAF SET - END
 
 	}
@@ -238,7 +258,7 @@ public class Node {
 	}
 
 	public static void main(String[] args) {
-		Node n = new Node(4, 2, "1111");
+		Node n = new Node(4, 0, "1111");
 		System.out.println("this " + n);
 	}
 
