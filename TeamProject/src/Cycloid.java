@@ -197,4 +197,9 @@ public class Cycloid {
 			return backCounter;
 	}
 
+	public static void main(String[] args) {
+		Cycloid s = new Cycloid();
+		int hops = s.noOfHops(4, 0, 15, 0, 12);
+		System.out.println(hops);
+	}
 }
