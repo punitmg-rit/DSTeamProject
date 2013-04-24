@@ -28,8 +28,14 @@ public class Cycloid {
 
 		while(!sourceNode.equals(destinationNode)){
 			hopCount++;
-
+			System.out.println(sourceNode);
 			sourceNode = nextHop(sourceNode, destinationNode);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return hopCount;
