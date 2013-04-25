@@ -17,7 +17,7 @@ public class Simulate {
 		int srcCubical;
 		int destCyclic;
 		int destCubical;
-		int hops = 0;
+		double hops = 0;
 
 		if (args.length != 4) {
 			throw new IllegalArgumentException(
@@ -51,7 +51,7 @@ public class Simulate {
 				}
 
 			}
-			hops = hops / denominator;
+			hops = (double)hops / (double)denominator;
 			noOfHops.add(hops);
 			dimensions.add(i);
 			System.out.println("Dimension: " + i + ". Avg hops: " + hops);

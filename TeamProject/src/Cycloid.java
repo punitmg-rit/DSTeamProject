@@ -31,7 +31,7 @@ public class Cycloid {
 			//System.out.println(sourceNode);
 			sourceNode = nextHop(sourceNode, destinationNode);
 			if(hopCount>=1000){
-				//System.out.println("Entering a cycle-- kill itertion");
+				System.out.println("Entering a cycle-- kill itertion");
 				return -1;
 			}
 //			try {
