@@ -32,7 +32,7 @@ public class Simulate {
 		prng = Random.getInstance(seed);
 		noOfHops = new ListSeries();
 		dimensions = new ListSeries();
-		for (int i = dLower; i < dUpper; i++) {
+		for (int i = dLower; i <= dUpper; i++) {
 			int denominator=0;
 			for (int j = 0; j < iterations; j++) {
 

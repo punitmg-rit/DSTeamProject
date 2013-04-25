@@ -30,9 +30,8 @@ public class Cycloid {
 			hopCount++;
 			//System.out.println(sourceNode);
 			sourceNode = nextHop(sourceNode, destinationNode);
-			
 			if(hopCount>=10000){
-				System.out.println("Entering a cycle-- kill itertion");
+				//System.out.println("Entering a cycle-- kill itertion");
 				return -1;
 			}
 //			try {
@@ -74,7 +73,9 @@ public class Cycloid {
 		if(flag == true ){
 			int src = source.getCyclicIndex();
 			int dest = destination.getCyclicIndex();
+			// Adding 1 here and in nextHop method too.
 			hopCount += traverse(src, dest, source.getDimension());
+			hopCount --;
 			return destination;
 
 		}
@@ -203,7 +204,7 @@ public class Cycloid {
 
 	public static void main(String[] args) {
 		Cycloid s = new Cycloid();
-		int hops = s.noOfHops(6, 5, 47, 2, 51);
-		System.out.println(hops);
+		int hops = s.noOfHops(3, 1, 1, 2,3);
+		System.out.println("Number of hops: "+hops);
 	}
 }
