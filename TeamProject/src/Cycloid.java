@@ -30,7 +30,7 @@ public class Cycloid {
 			hopCount++;
 			//System.out.println(sourceNode);
 			sourceNode = nextHop(sourceNode, destinationNode);
-			if(hopCount>=10000){
+			if(hopCount>=1000){
 				//System.out.println("Entering a cycle-- kill itertion");
 				return -1;
 			}
