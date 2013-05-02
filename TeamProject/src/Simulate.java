@@ -4,6 +4,7 @@ import edu.rit.numeric.ListXYZSeries;
 import edu.rit.numeric.Series;
 import edu.rit.numeric.XYZSeries;
 import edu.rit.numeric.plot.Plot;
+import edu.rit.numeric.plot.Strokes;
 import edu.rit.util.Random;
 
 public class Simulate {
@@ -57,7 +58,6 @@ public class Simulate {
 				// HDseries.add(i, H);
 				System.out.printf("\t%.2f", hopsMean);
 				hopsMeanSeries.add(hopsMean);
-				
 
 			}
 
@@ -65,7 +65,8 @@ public class Simulate {
 			Series.Stats stats = hopsMeanSeries.stats();
 			double hopsMeanOfMeans = stats.mean;
 			double hopsStddev = stats.stddev;
-			System.out.printf("\tmean = %.2f, stddev = %.2f%n", hopsMeanOfMeans, hopsStddev);
+			System.out.printf("\tmean = %.2f, stddev = %.2f%n",
+					hopsMeanOfMeans, hopsStddev);
 			hopsDimensionSeries.add(i, hopsMeanOfMeans);
 			xyzSeries.add(i, stats.mean, stats.stddev);
 			System.out.println();
@@ -81,8 +82,15 @@ public class Simulate {
 		System.out.printf("chi^2 = %.6f%n", regression.chi2);
 		System.out.printf("p-value = %.6f%n", regression.significance);
 
-		new Plot().yAxisTitle("Average Number of hops").xAxisTitle("Dimension")
-				.xySeries(hopsDimensionSeries).seriesStroke(null).getFrame()
+		new Plot()
+				.yAxisTitle("Average Number of hops")
+				.xAxisTitle("Dimension")
+				.seriesStroke(null)
+				.xySeries(hopsDimensionSeries)
+				.seriesDots(null)
+				.seriesStroke(Strokes.solid(1))
+				.xySeries(dLower, regression.a + regression.b * dLower, dUpper,
+						regression.a + regression.b * dUpper).getFrame()
 				.setVisible(true);
 	}
 }
