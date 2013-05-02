@@ -1,4 +1,3 @@
-import edu.rit.numeric.AggregateXYSeries;
 import edu.rit.numeric.ListSeries;
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.ListXYZSeries;
@@ -31,14 +30,15 @@ public class Simulate {
 		}
 
 		prng = Random.getInstance(seed);
-		ListXYSeries HDseries = new ListXYSeries();
+		ListXYSeries hopsDimensionSeries = new ListXYSeries();
 		ListXYZSeries xyzSeries = new ListXYZSeries();
 		for (int i = dLower; i <= dUpper; i++) {
-			System.out.printf("%d", i);
-			ListSeries HMeanSeries = new ListSeries();
+			System.out.printf("Dimension: %d", i);
+			System.out.printf("\t Average Hops: ");
+			ListSeries hopsMeanSeries = new ListSeries();
 			for (int j = 0; j < iterations; j++) {
 
-				ListSeries Hseries = new ListSeries();
+				ListSeries hopsSeries = new ListSeries();
 				for (int k = 0; k < iterations; k++) {
 
 					srcCyclic = (prng.nextInt(seed) % i);
@@ -50,39 +50,39 @@ public class Simulate {
 					int tempHops = s.noOfHops(i, srcCyclic, srcCubical,
 							destCyclic, destCubical);
 					// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+"). Hops: "+tempHops);
-					Hseries.add(tempHops);
+					hopsSeries.add(tempHops);
 				}
-				Series.Stats stats = Hseries.stats();
-				double H = stats.mean;
+				Series.Stats stats = hopsSeries.stats();
+				double hopsMean = stats.mean;
 				// HDseries.add(i, H);
-				System.out.printf("\t%.2f", H);
-				HMeanSeries.add(H);
+				System.out.printf("\t%.2f", hopsMean);
+				hopsMeanSeries.add(hopsMean);
 				
 
 			}
 
 			System.out.println();
-			Series.Stats stats = HMeanSeries.stats();
-			double HMean = stats.mean;
-			double HStddev = stats.stddev;
-			System.out.printf("\tmean = %.2f, stddev = %.2f%n", HMean, HStddev);
-			HDseries.add(i, HMean);
+			Series.Stats stats = hopsMeanSeries.stats();
+			double hopsMeanOfMeans = stats.mean;
+			double hopsStddev = stats.stddev;
+			System.out.printf("\tmean = %.2f, stddev = %.2f%n", hopsMeanOfMeans, hopsStddev);
+			hopsDimensionSeries.add(i, hopsMeanOfMeans);
 			xyzSeries.add(i, stats.mean, stats.stddev);
 			System.out.println();
 		}
 
-		XYZSeries.Regression regr = xyzSeries.linearRegression();
+		XYZSeries.Regression regression = xyzSeries.linearRegression();
 		System.out.printf("H = a + b*D\n");
-		System.out.printf("a = %.2f%n", regr.a);
-		System.out.printf("b = %.2f%n", regr.b);
-		System.out.printf("stddev(a) = %.2f%n", Math.sqrt(regr.var_a));
-		System.out.printf("stddev(b) = %.2f%n", Math.sqrt(regr.var_b));
+		System.out.printf("a = %.2f%n", regression.a);
+		System.out.printf("b = %.2f%n", regression.b);
+		System.out.printf("stddev(a) = %.2f%n", Math.sqrt(regression.var_a));
+		System.out.printf("stddev(b) = %.2f%n", Math.sqrt(regression.var_b));
 
-		System.out.printf("chi^2 = %.6f%n", regr.chi2);
-		System.out.printf("p-value = %.6f%n", regr.significance);
+		System.out.printf("chi^2 = %.6f%n", regression.chi2);
+		System.out.printf("p-value = %.6f%n", regression.significance);
 
 		new Plot().yAxisTitle("Average Number of hops").xAxisTitle("Dimension")
-				.xySeries(HDseries).seriesStroke(null).getFrame()
+				.xySeries(hopsDimensionSeries).seriesStroke(null).getFrame()
 				.setVisible(true);
 	}
 }
