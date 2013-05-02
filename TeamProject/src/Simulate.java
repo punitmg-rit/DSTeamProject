@@ -1,12 +1,14 @@
-import edu.rit.util.Random;
 import edu.rit.numeric.AggregateXYSeries;
 import edu.rit.numeric.ListSeries;
+import edu.rit.numeric.ListXYSeries;
+import edu.rit.numeric.ListXYZSeries;
+import edu.rit.numeric.Series;
+import edu.rit.numeric.XYZSeries;
 import edu.rit.numeric.plot.Plot;
+import edu.rit.util.Random;
 
 public class Simulate {
 	private static Random prng;
-	private static ListSeries noOfHops;
-	private static ListSeries dimensions;
 
 	public static void main(String args[]) {
 		int dLower = 0;
@@ -17,7 +19,6 @@ public class Simulate {
 		int srcCubical;
 		int destCyclic;
 		int destCubical;
-		double hops = 0;
 
 		if (args.length != 4) {
 			throw new IllegalArgumentException(
@@ -30,34 +31,58 @@ public class Simulate {
 		}
 
 		prng = Random.getInstance(seed);
-		noOfHops = new ListSeries();
-		dimensions = new ListSeries();
+		ListXYSeries HDseries = new ListXYSeries();
+		ListXYZSeries xyzSeries = new ListXYZSeries();
 		for (int i = dLower; i <= dUpper; i++) {
-			int denominator=0;
+			System.out.printf("%d", i);
+			ListSeries HMeanSeries = new ListSeries();
 			for (int j = 0; j < iterations; j++) {
 
-				srcCyclic = (prng.nextInt(seed) % i);
-				destCyclic = (prng.nextInt(seed) % i);
-				srcCubical = (int) (prng.nextInt(seed) % (Math.pow(2, i)));
-				destCubical = (int) (prng.nextInt(seed) % (Math.pow(2, i)));
-				// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+").");
-				Cycloid s = new Cycloid();
-				int tempHops = s.noOfHops(i, srcCyclic, srcCubical, destCyclic,
-						destCubical);
-				// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+"). Hops: "+tempHops);
-				if (tempHops > 0){
-					hops += tempHops;
-					denominator++;
+				ListSeries Hseries = new ListSeries();
+				for (int k = 0; k < iterations; k++) {
+
+					srcCyclic = (prng.nextInt(seed) % i);
+					destCyclic = (prng.nextInt(seed) % i);
+					srcCubical = (int) (prng.nextInt(seed) % (Math.pow(2, i)));
+					destCubical = (int) (prng.nextInt(seed) % (Math.pow(2, i)));
+					// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+").");
+					Cycloid s = new Cycloid();
+					int tempHops = s.noOfHops(i, srcCyclic, srcCubical,
+							destCyclic, destCubical);
+					// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+"). Hops: "+tempHops);
+					Hseries.add(tempHops);
 				}
+				Series.Stats stats = Hseries.stats();
+				double H = stats.mean;
+				// HDseries.add(i, H);
+				System.out.printf("\t%.2f", H);
+				HMeanSeries.add(H);
+				
 
 			}
-			hops = (double)hops / (double)denominator;
-			noOfHops.add(hops);
-			dimensions.add(i);
-			System.out.println("Dimension: " + i + ". Avg hops: " + hops);
+
+			System.out.println();
+			Series.Stats stats = HMeanSeries.stats();
+			double HMean = stats.mean;
+			double HStddev = stats.stddev;
+			System.out.printf("\tmean = %.2f, stddev = %.2f%n", HMean, HStddev);
+			HDseries.add(i, HMean);
+			xyzSeries.add(i, stats.mean, stats.stddev);
+			System.out.println();
 		}
 
-		new Plot().xAxisTitle("Number of hops").yAxisTitle("Dimensions")
-				.xySeries(new AggregateXYSeries(noOfHops, dimensions));
+		XYZSeries.Regression regr = xyzSeries.linearRegression();
+		System.out.printf("H = a + b*D\n");
+		System.out.printf("a = %.2f%n", regr.a);
+		System.out.printf("b = %.2f%n", regr.b);
+		System.out.printf("stddev(a) = %.2f%n", Math.sqrt(regr.var_a));
+		System.out.printf("stddev(b) = %.2f%n", Math.sqrt(regr.var_b));
+
+		System.out.printf("chi^2 = %.6f%n", regr.chi2);
+		System.out.printf("p-value = %.6f%n", regr.significance);
+
+		new Plot().yAxisTitle("Average Number of hops").xAxisTitle("Dimension")
+				.xySeries(HDseries).seriesStroke(null).getFrame()
+				.setVisible(true);
 	}
 }
