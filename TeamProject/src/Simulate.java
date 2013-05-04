@@ -51,7 +51,8 @@ public class Simulate {
 					int tempHops = s.noOfHops(i, srcCyclic, srcCubical,
 							destCyclic, destCubical);
 					// System.out.println("Dimension: "+i+". Source: ("+srcCyclic+","+srcCubical+"). Destination: ("+destCyclic+","+destCubical+"). Hops: "+tempHops);
-					hopsSeries.add(tempHops);
+					if (tempHops > 0)
+						hopsSeries.add(tempHops);
 				}
 				Series.Stats stats = hopsSeries.stats();
 				double hopsMean = stats.mean;
