@@ -33,8 +33,8 @@ public class Simulate02 {
 		prng = Random.getInstance(seed);
 		ListXYSeries hopsDimensionSeries = new ListXYSeries();
 		ListXYZSeries xyzSeries = new ListXYZSeries();
+		XYZSeries.Regression regression = null;
 
-		System.out.printf("H = a + b*D\n");
 		System.out
 				.println("Range\t\tAverage Hops\t a\t b\tstddev(a)\tstddev(b)\tchi^2\t\tp-value");
 		System.out.println("\t\tMean\tStddev");
@@ -64,26 +64,39 @@ public class Simulate02 {
 
 			}
 
-			System.out.printf("%d", i-dLower);
+			
 
 			Series.Stats stats = hopsMeanSeries.stats();
 			double hopsMeanOfMeans = stats.mean;
 			double hopsStddev = stats.stddev;
 			hopsDimensionSeries.add(i, hopsMeanOfMeans);
 
-			System.out.printf("\t\t%.2f\t%.2f", hopsMeanOfMeans, hopsStddev);
+			
 			xyzSeries.add(i, stats.mean, stats.stddev);
 			if (i - dLower > 1) {
-
-				XYZSeries.Regression regression = xyzSeries.linearRegression();
+				System.out.printf("%d",i-dLower);
+				System.out.printf("\t\t%.2f\t%.2f", hopsMeanOfMeans, hopsStddev);
+				regression = xyzSeries.linearRegression();
 				System.out.printf("\t%.2f\t%.2f\t%.2f\t\t%.2f\t\t%.6f\t%.6f",
 						regression.a, regression.b,
 						Math.sqrt(regression.var_a),
 						Math.sqrt(regression.var_b), regression.chi2,
 						regression.significance);
+				System.out.println();
 			}
-			System.out.println();
+			
 		}
+		
+		new Plot()
+		.yAxisTitle("Average Number of hops")
+		.xAxisTitle("Dimension")
+		.seriesStroke(null)
+		.xySeries(hopsDimensionSeries)
+		.seriesDots(null)
+		.seriesStroke(Strokes.solid(1))
+		.xySeries(dLower, regression.a + regression.b * dLower, dUpper,
+				regression.a + regression.b * dUpper).getFrame()
+		.setVisible(true);
 
 	}
 }
