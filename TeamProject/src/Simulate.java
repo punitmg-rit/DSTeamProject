@@ -7,9 +7,24 @@ import edu.rit.numeric.plot.Plot;
 import edu.rit.numeric.plot.Strokes;
 import edu.rit.util.Random;
 
+/**
+ * class Simulate fetches data for the simulation and conducts the linear
+ * regression.
+ * 
+ * @author Punit Gadenkanahalli
+ * @version 04-May-2013
+ */
 public class Simulate {
+
 	private static Random prng;
 
+	/**
+	 * Main method.
+	 * 
+	 * @param args
+	 *            command line arguments, lower dimension value, upper dimension
+	 *            value, no. of iterations, seed
+	 */
 	public static void main(String args[]) {
 		int dLower = 0;
 		int dUpper = 0;
@@ -64,18 +79,18 @@ public class Simulate {
 
 			}
 
-			
-
+			// get the mean and standard deviation values from the data
+			// collected
 			Series.Stats stats = hopsMeanSeries.stats();
 			double hopsMeanOfMeans = stats.mean;
 			double hopsStddev = stats.stddev;
 			hopsDimensionSeries.add(i, hopsMeanOfMeans);
 
-			
 			xyzSeries.add(i, stats.mean, stats.stddev);
 			if (i - dLower > 1) {
-				System.out.printf("%d",i-dLower);
-				System.out.printf("\t\t%.2f\t%.2f", hopsMeanOfMeans, hopsStddev);
+				System.out.printf("%d", i - dLower);
+				System.out
+						.printf("\t\t%.2f\t%.2f", hopsMeanOfMeans, hopsStddev);
 				regression = xyzSeries.linearRegression();
 				System.out.printf("\t%.2f\t%.2f\t%.2f\t\t%.2f\t\t%.6f\t%.6f",
 						regression.a, regression.b,
@@ -84,19 +99,21 @@ public class Simulate {
 						regression.significance);
 				System.out.println();
 			}
-			
+
 		}
-		
+
+		// plot the data points collected and the straight line using the values
+		// from the linear regression
 		new Plot()
-		.yAxisTitle("Average Number of hops")
-		.xAxisTitle("Dimension")
-		.seriesStroke(null)
-		.xySeries(hopsDimensionSeries)
-		.seriesDots(null)
-		.seriesStroke(Strokes.solid(1))
-		.xySeries(dLower, regression.a + regression.b * dLower, dUpper,
-				regression.a + regression.b * dUpper).getFrame()
-		.setVisible(true);
+				.yAxisTitle("Average Number of hops")
+				.xAxisTitle("Dimension")
+				.seriesStroke(null)
+				.xySeries(hopsDimensionSeries)
+				.seriesDots(null)
+				.seriesStroke(Strokes.solid(1))
+				.xySeries(dLower, regression.a + regression.b * dLower, dUpper,
+						regression.a + regression.b * dUpper).getFrame()
+				.setVisible(true);
 
 	}
 }
