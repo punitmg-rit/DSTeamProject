@@ -1,0 +1,17 @@
+Program Arguments: 
+	Lower limit of Dimension <lower_dimension>
+	Higher limit of Dimension <upper_dimension>
+	No. of Iteration <no_of_iteration>
+	Seed <seed>
+
+$ java Simulate <lower_dimension> <upper_dimension> <no_of_iteration> <seed>
+
+
+Test case 1: 
+java Simulate 3 15 50 35643
+
+Test case 2:
+java Simulate 3 30 50 53636 
+
+Test case 3:
+java Simulate 3 60 50 53636
