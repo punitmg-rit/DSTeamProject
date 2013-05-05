@@ -1,9 +1,33 @@
+/**
+ * class Cycloid implements the routing algorithm of the cycloid network. It has
+ * a function noOfHops() which returns the no of hops for a look up request.
+ * 
+ * @author Pavan Deshpande
+ * @version 4-May-2013
+ * 
+ */
 public class Cycloid {
+
 	private Node sourceNode;
 	private Node destinationNode;
 
 	private static int hopCount;
 
+	/**
+	 * For the given source and destination node, calculate the number of hops
+	 * 
+	 * @param dimension
+	 *            dimension of the cycloid network
+	 * @param sourceCyclic
+	 *            cyclic index of the source node
+	 * @param sourceCubical
+	 *            cubical index of the source node
+	 * @param destCyclic
+	 *            cyclic index of the destination node
+	 * @param destCubical
+	 *            cubical index of the destination node
+	 * @return int - no of hops for this request
+	 */
 	public int noOfHops(int dimension, int sourceCyclic, int sourceCubical,
 			int destCyclic, int destCubical) {
 
@@ -43,6 +67,16 @@ public class Cycloid {
 		return hopCount;
 	}
 
+	/**
+	 * Calculates the most significant different bit in the source node with
+	 * respect to the destination node
+	 * 
+	 * @param source
+	 *            source node
+	 * @param dest
+	 *            destination node
+	 * @return int - most significant different bit
+	 */
 	public int getMsdb(Node source, Node dest) {
 		for (int i = 0; i < source.getDimension(); i++) {
 			if (source.getCubicalIndex().charAt(i) != dest.getCubicalIndex()
@@ -52,6 +86,17 @@ public class Cycloid {
 		return -1;
 	}
 
+	/**
+	 * Calculates the difference in terms of the numerical difference between
+	 * source and destination nodes
+	 * 
+	 * @param source
+	 *            source node
+	 * @param dest
+	 *            destination node
+	 * @return int - distance in terms of numerical difference between the
+	 *         source and destination node's cubical indices
+	 */
 	public int getDistance(Node source, Node dest) {
 
 		int s = Integer.parseInt(source.getCubicalIndex(), 2);
@@ -59,6 +104,15 @@ public class Cycloid {
 		return Math.abs(s - d);
 	}
 
+	/**
+	 * Calculates the next node for the hop
+	 * 
+	 * @param source
+	 *            source node
+	 * @param destination
+	 *            destination node
+	 * @return {@linkplain Node} - Next node
+	 */
 	public Node nextHop(Node source, Node destination) {
 		Node nextNode = new Node();
 		int msdb = 0;
@@ -95,6 +149,19 @@ public class Cycloid {
 		return nextNode;
 	}
 
+	/**
+	 * Calculates the next hop using the descend from the routing algorithm
+	 * 
+	 * @param k
+	 *            cyclic index of the source node
+	 * @param msdb
+	 *            most significant different bit
+	 * @param src
+	 *            source node
+	 * @param dest
+	 *            destination node
+	 * @return Node next node
+	 */
 	public Node descending(int k, int msdb, Node src, Node dest) {
 		if (k == msdb) {
 			return new Node(src.getDimension(), src.getCubicalNeighbor()
@@ -146,6 +213,21 @@ public class Cycloid {
 
 	}
 
+	/**
+	 * Calculates the next node for the hop from the ascend part of the routing
+	 * algorithm.
+	 * 
+	 * @param k
+	 *            cyclic index of the source node
+	 * @param msdb
+	 *            most significant different bit
+	 * @param src
+	 *            source node
+	 * @param dest
+	 *            destination node
+	 * @return {@linkplain Node} next node
+	 */
+
 	public Node ascending(int k, int msdb, Node src, Node dest) {
 		Node next = new Node();
 		while (k < msdb) {
@@ -179,6 +261,18 @@ public class Cycloid {
 		return next;
 	}
 
+	/**
+	 * Calculates the number of hops required to reach the destination in the
+	 * same cycle.
+	 * 
+	 * @param src
+	 *            source node
+	 * @param dest
+	 *            destination node
+	 * @param d
+	 *            dimension
+	 * @return int - number of hops around the cycle
+	 */
 	public int traverse(int src, int dest, int d) {
 		int fwdCounter = 0;
 		int backCounter = 0;
@@ -212,9 +306,4 @@ public class Cycloid {
 			return backCounter;
 	}
 
-	public static void main(String[] args) {
-		Cycloid s = new Cycloid();
-		int hops = s.noOfHops(5, 4, 17, 2, 19);
-		System.out.println("Number of hops: " + hops);
-	}
 }
